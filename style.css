@@ -61,3 +61,33 @@ footer {
     background-color: #333;
     color: #fff;
 }
+
+/* Cachet Status Styles */
+#cachet-status {
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+}
+
+.cachet-component {
+    list-style: none;
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+.component-status.operational {
+    color: green;
+}
+
+.component-status.performance-issues {
+    color: orange;
+}
+
+.component-status.partial-outage {
+    color: red;
+}
+
+.component-status.major-outage {
+    color: darkred;
+}
