@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Status</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Website Status</h1>
+    </header>
+
+    <section id="cachet-status">
+        <h2>System Status</h2>
+        <div id="cachet-components">
+            <!-- Status components will be loaded here -->
+            <p>Loading...</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2023 My Website</p>
+    </footer>
+
+    <script>
+        async function fetchCachetStatus() {
+            const cachetApiUrl = 'YOUR CACHET API URL HERE'; // Replace with your Cachet URL
+
+            try {
+                const response = await fetch(cachetApiUrl, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // 'X-Cachet-Token': 'YOUR_API_TOKEN' // If your Cachet instance requires an API token
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                displayCachetStatus(data.data);
+            } catch (error) {
+                console.error('Error fetching Cachet status:', error);
+                document.getElementById('cachet-components').innerHTML = '<p>Error loading status.</p>';
+            }
+        }
+
+        function displayCachetStatus(components) {
+            const componentsDiv = document.getElementById('cachet-components');
+            componentsDiv.innerHTML = ''; // Clear "Loading..." message
+
+            if (!components || components.length === 0) {
+                componentsDiv.innerHTML = '<p>No components found.</p>';
+                return;
+            }
+
+            const ul = document.createElement('ul');
+            components.forEach(component => {
+                const li = document.createElement('li');
+                li.className = 'cachet-component';
+
+                let statusText = '';
+                let statusClass = '';
+
+                switch (component.status) {
+                    case 1: // Operational
+                        statusText = 'Operational';
+                        statusClass = 'operational';
+                        break;
+                    case 2: // Performance Issues
+                        statusText = 'Performance Issues';
+                        statusClass = 'performance-issues';
+                        break;
+                    case 3: // Partial Outage
+                        statusText = 'Partial Outage';
+                        statusClass = 'partial-outage';
+                        break;
+                    case 4: // Major Outage
+                        statusText = 'Major Outage';
+                        statusClass = 'major-outage';
+                        break;
+                    default:
+                        statusText = 'Unknown';
+                        statusClass = 'unknown';
+                }
+
+                li.innerHTML = `
+                    <span class="component-name">${component.name}:</span>
+                    <span class="component-status ${statusClass}">${statusText}</span>
+                `;
+                ul.appendChild(li);
+            });
+            componentsDiv.appendChild(ul);
+        }
+
+        // Call the function to fetch and display the status when the page loads
+        window.onload = fetchCachetStatus;
+    </script>
+</body>
+</html>
